@@ -36,16 +36,16 @@ Texture::~Texture() {
 
 SDL_Texture* Texture::get() { return texture; }
 
-SDL_Rect Texture::getRegion() const {
-  int w,h;
-  if (0 != SDL_QueryTexture(texture, NULL, NULL, &w, &h)) {
+Vec2 Texture::getSize() const {
+  Vec2 size;
+  if (0 != SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y)) {
     fprintf(stderr, "SDL_QueryTexture() failed: %s\n", SDL_GetError());
     exit(1);
   }
-  return { 0, 0, w, h };
+  return size;
 }
 
-int Texture::width() const { return getRegion().w; }
+int Texture::width() const { return getSize().x; }
 
-int Texture::height() const { return getRegion().h; }
+int Texture::height() const { return getSize().y; }
 

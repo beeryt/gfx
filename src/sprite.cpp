@@ -1,9 +1,11 @@
 #include "sprite.h"
+#include <SDL.h>
 #include <cassert>
 
 Sprite::Sprite(Texture* texture) : texture(texture) {
   if (texture) {
-    region = texture->getRegion();
+    auto size = texture->getSize();
+    region = { 0, 0, size.x, size.y };
   }
 }
 
@@ -11,9 +13,10 @@ Sprite::Sprite(Sprite& sprite, unsigned frame) : Sprite(sprite) {
   setFrame(frame);
 }
 
-void Sprite::draw(SDL_Renderer* renderer, SDL_Rect dst) const {
+void Sprite::draw(SDL_Renderer* renderer, Rect d) const {
   int w = region.w / hframes;
   int h = region.h / vframes;
+  SDL_Rect dst{ d.x, d.y, d.w, d.h };
   SDL_Rect src{
     static_cast<int>(region.x + (w * (frame % hframes))),
     static_cast<int>(region.y + (h * (frame / hframes))),
@@ -25,8 +28,8 @@ void Sprite::draw(SDL_Renderer* renderer, SDL_Rect dst) const {
   }
 }
 
-SDL_Rect Sprite::getRegion() const { return region; }
-void Sprite::setRegion(SDL_Rect r) {
+Rect Sprite::getRegion() const { return region; }
+void Sprite::setRegion(Rect r) {
   assert(r.x >= 0 && r.x < texture->width());
   assert(r.y >= 0 && r.y < texture->height());
   assert(r.w > 0 && r.w <= (texture->width() - r.x));

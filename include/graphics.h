@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL.h>
 #include "texture.h"
 #include "sprite.h"
 
@@ -7,6 +6,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+struct SDL_Window;
 
 /// A simple Color struct for 8-bit RGBA
 struct Color {

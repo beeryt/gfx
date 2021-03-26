@@ -1,6 +1,17 @@
 #pragma once
-#include <SDL.h>
 #include <string>
+
+struct SDL_Texture;
+struct SDL_Renderer;
+
+struct Vec2 {
+  int x;
+  int y;
+};
+
+struct Rect {
+  int x,y,w,h;
+};
 
 /// A Texture is a wrapper around an SDL_Texture
 class Texture {
@@ -24,11 +35,8 @@ class Texture {
     Texture& operator=(Texture&& move) noexcept;
 
     /// @brief Gets the size of this Texture.
-    /// @todo Should return a Vec2.
-    /// @todo Rename to getSize().
-    /// @brief Gets the width and height of this Texture.
     /// @returns the width and height of this Texture.
-    SDL_Rect getRegion() const;
+    Vec2 getSize() const;
     /// @brief Gets the width of this Texture.
     /// @returns the width of this Texture.
     int width() const;

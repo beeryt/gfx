@@ -87,7 +87,7 @@ Texture& Graphics::createTexture(const std::string& filename) {
 }
 
 void Graphics::drawSprite(const Sprite& sprite, int x, int y, int w, int h) {
-  SDL_Rect rect{ x, y, w, h };
+  Rect rect{ x, y, w, h };
   sprite.draw(renderer, rect);
 }
 
