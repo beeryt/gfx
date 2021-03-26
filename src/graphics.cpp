@@ -24,7 +24,7 @@ void initialize() {
   global_font = TTF_OpenFont("assets/font.ttf", 72);
   if (global_font == NULL) {
     fprintf(stderr, "Failed to initialize font: %s\n", TTF_GetError());
-    exit(1);
+    // not a fatal error
   }
 }
 
@@ -98,6 +98,10 @@ void Graphics::drawChar(char c, int x, int y, int w, int h) {
 }
 
 void Graphics::drawText(const std::string& text, int x, int y, int w, int h) {
+  if (!global_font) {
+    fprintf(stderr, "Font was not initialized. Check logs.\n");
+    exit(1);
+  }
   SDL_Surface *surface;
   SDL_Texture *texture;
   SDL_Color textColor = { 0xFF, 0xFF, 0xFF, 0 };
