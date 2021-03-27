@@ -1,6 +1,7 @@
 #pragma once
 #include "texture.h"
 #include "sprite.h"
+#include "font.h"
 
 #include <functional>
 #include <memory>
@@ -27,6 +28,8 @@ struct Color {
 namespace colors {
   const Color black{ 0, 0, 0, 0xFF };
 }
+
+extern Font default_font;
 
 /// Graphics is a graphical window interface
 class Graphics {
@@ -85,6 +88,11 @@ class Graphics {
     /// @returns A Texture reference.
     Texture& createTexture(const std::string&);
 
+    /// @brief Creates a font from a file.
+    /// @param filename The filename of a desired font.
+    /// @returns A Font reference.
+    Font& createFont(const std::string&);
+
     /// @brief Handles internal event loop.
     /// @returns false if window should close, true otherwise.
     bool loop();
@@ -121,19 +129,21 @@ class Graphics {
     /// @param y The y-coordinate of the top-left corner.
     /// @param w The horizontal width of the character.
     /// @param h The vertical height of the character.
-    void drawChar(char c, int x, int y, int w, int h);
+    void drawChar(char c, int x, int y, int w, int h, Font& font = default_font);
     /// @brief Draws text on the screen.
     /// @param text The text to draw.
     /// @param x The x-coordinate of the top-left corner.
     /// @param y The y-coordinate of the top-left corner.
     /// @param w The horizontal width of the text to draw.
     /// @param h The vertical height of the text to draw.
-    void drawText(const std::string& text, int x, int y, int w, int h);
+    /// @param font The font to draw with.
+    void drawText(const std::string& text, int x, int y, int w, int h, Font& font = default_font);
 
   private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     std::vector<std::unique_ptr<Texture>> textures;
+    std::vector<std::unique_ptr<Font>> fonts;
     MotionCallback motionCallback;
     TouchCallback touchCallback;
     ReleaseCallback releaseCallback;

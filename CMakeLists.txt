@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(GFX
-  VERSION 1.0.0
+  VERSION 1.1.0
   DESCRIPTION "A dumb-as-nails graphics framework build on SDL2")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -12,6 +12,7 @@ add_library(gfx
   src/graphics.cpp
   src/texture.cpp
   src/sprite.cpp
+  src/font.cpp
 )
 target_include_directories(gfx PUBLIC include)
 target_include_directories(gfx PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
