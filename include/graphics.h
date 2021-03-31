@@ -1,5 +1,6 @@
 #pragma once
 #include "window.h"
+#include "shader.h"
 #include "texture.h"
 #include <functional>
 #include <vector>

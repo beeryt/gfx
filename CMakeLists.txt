@@ -13,6 +13,7 @@ target_link_libraries(glad ${CMAKE_DL_LIBS})
 add_library(gfx
   src/graphics.cpp
   src/window.cpp
+  src/shader.cpp
 )
 target_include_directories(gfx PUBLIC include)
 target_link_libraries(gfx PRIVATE glfw glad)
