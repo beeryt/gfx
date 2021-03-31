@@ -1,27 +1,18 @@
 #pragma once
 #include <string>
-
-// forward declaration of Graphics
-class Graphics;
-
-struct Vec2 {
-  int x;
-  int y;
-};
+#include <glm/glm.hpp>
 
 struct Rect {
   int x,y,w,h;
 };
 
-/// A Texture is a wrapper around an SDL_Texture
 class Texture {
   public:
     /// @brief Default constructor for a Texture.
     Texture();
-    /// @brief Create a Texture from filename using renderer.
+    /// @brief Create a Texture from file.
     /// @param filename The filename of a desired image.
-    /// @param renderer The renderer which will be used for this texture.
-    Texture(const std::string& filename, Graphics* renderer);
+    Texture(const std::string& filename);
 
     virtual ~Texture();
 
@@ -35,7 +26,7 @@ class Texture {
 
     /// @brief Gets the size of this Texture.
     /// @returns the width and height of this Texture.
-    Vec2 getSize() const;
+    glm::vec2 getSize() const;
     /// @brief Gets the width of this Texture.
     /// @returns the width of this Texture.
     int width() const;
@@ -43,13 +34,9 @@ class Texture {
     /// @returns the height of this Texture.
     int height() const;
 
-    struct Internal;
-    /// @brief Gets the internal texture data.
-    /// @returns the internal SDL_Texture.
-    const Internal* get();
-
   private:
-    Internal* internal;
+    struct Internal;
+    std::unique_ptr<Internal> internal;
 
     /// There is no copy constructor for a Texture.
     Texture(const Texture&) = delete;

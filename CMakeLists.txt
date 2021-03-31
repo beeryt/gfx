@@ -4,16 +4,18 @@ project(GFX
   DESCRIPTION "A dumb-as-nails graphics framework build on SDL2")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
+find_package(glfw3 3.3 REQUIRED)
+
+add_library(glad libs/glad/src/gl.c)
+target_include_directories(glad PUBLIC libs/glad/include)
+target_link_libraries(glad ${CMAKE_DL_LIBS})
 
 add_library(gfx
   src/graphics.cpp
+  src/window.cpp
 )
 target_include_directories(gfx PUBLIC include)
-target_include_directories(gfx PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
-target_link_libraries(gfx PRIVATE SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+target_link_libraries(gfx PRIVATE glfw glad)
 
 option(BUILD_DOC "Build documentation" OFF)
 find_package(Doxygen)
