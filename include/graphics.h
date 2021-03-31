@@ -14,6 +14,8 @@ class Graphics {
     template <class... Args>
     static std::shared_ptr<Window> CreateWindow(Args...args) { return std::make_shared<Window>(args...); }
 
+    static void Initialize() { Instance(); }
+
   private:
     Graphics();
     ~Graphics();

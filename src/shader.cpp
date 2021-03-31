@@ -26,6 +26,7 @@ void CheckCompileErrors(unsigned int id, bool compiler) {
   if (!success) {
     GetInfoLog(id, sizeof(infoLog), NULL, infoLog);
     fprintf(stderr, "ERROR:SHADER:%s: %s\n", name, infoLog);
+    exit(1);
   }
 }
 

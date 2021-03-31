@@ -1,4 +1,5 @@
 #include "window.h"
+#include "graphics.h"
 #include <cassert>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -12,6 +13,7 @@ struct Window::Internal {
 
 Window::Window(const string& title, int width, int height, int hints) {
   spdlog::trace("{}", __PRETTY_FUNCTION__);
+  Graphics::Initialize();
   internal = std::make_unique<Internal>();
 
   if (hints & VISIBLE) glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
