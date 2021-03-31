@@ -28,14 +28,31 @@ void initialize() {
   }
 }
 
+struct Graphics::Internal {
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+};
+
 Graphics::Graphics(const char* title, int w, int h) {
   initialize();
+
+  internal = new Internal;
+  internal->window = nullptr;
+  internal->renderer = nullptr;
+
   uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
-  if (0 != SDL_CreateWindowAndRenderer(w,h,flags,&window,&renderer)) {
+  if (0 != SDL_CreateWindowAndRenderer(w,h,flags,&internal->window,&internal->renderer)) {
     fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
     exit(1);
   }
-  SDL_SetWindowTitle(window, title);
+  SDL_SetWindowTitle(internal->window, title);
+}
+
+Graphics::~Graphics() {
+  textures.clear();
+  SDL_DestroyRenderer(internal->renderer);
+  SDL_DestroyWindow(internal->window);
+  delete internal;
 }
 
 bool Graphics::loop() {
@@ -56,12 +73,12 @@ bool Graphics::loop() {
 }
 
 void Graphics::swap() {
-  SDL_RenderPresent(renderer);
+  SDL_RenderPresent(internal->renderer);
 }
 
 void Graphics::clear(Color c) {
-  SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-  SDL_RenderClear(renderer);
+  SDL_SetRenderDrawColor(internal->renderer, c.r, c.g, c.b, c.a);
+  SDL_RenderClear(internal->renderer);
 }
 
 void Graphics::setMotionCallback(MotionCallback cb) { motionCallback = cb; }
@@ -69,7 +86,7 @@ void Graphics::setTouchCallback(TouchCallback cb) { touchCallback = cb; }
 void Graphics::setReleaseCallback(ReleaseCallback cb) { releaseCallback = cb; }
 
 void Graphics::setLogical(int w, int h) {
-  if (0 != SDL_RenderSetLogicalSize(renderer, w, h)) {
+  if (0 != SDL_RenderSetLogicalSize(internal->renderer, w, h)) {
     fprintf(stderr, "Failed to set logical size: %s\n", SDL_GetError());
     return;
   }
@@ -77,18 +94,18 @@ void Graphics::setLogical(int w, int h) {
 
 void Graphics::fillRect(int x, int y, int w, int h, Color c) {
   SDL_Rect rect{ x, y, w, h };
-  SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-  SDL_RenderFillRect(renderer, &rect);
+  SDL_SetRenderDrawColor(internal->renderer, c.r, c.g, c.b, c.a);
+  SDL_RenderFillRect(internal->renderer, &rect);
 }
 
 Texture& Graphics::createTexture(const std::string& filename) {
-  textures.push_back(std::make_unique<Texture>(filename, renderer));
+  //textures.push_back(std::make_unique<Texture>(filename, this));
   return *textures.back().get();
 }
 
 void Graphics::drawSprite(const Sprite& sprite, int x, int y, int w, int h) {
   Rect rect{ x, y, w, h };
-  sprite.draw(renderer, rect);
+  //sprite.draw(this, rect);
 }
 
 void Graphics::drawChar(char c, int x, int y, int w, int h) {
@@ -107,10 +124,10 @@ void Graphics::drawText(const std::string& text, int x, int y, int w, int h) {
   SDL_Color textColor = { 0xFF, 0xFF, 0xFF, 0 };
 
   surface = TTF_RenderText_Solid(global_font, text.c_str(), textColor);
-  texture = SDL_CreateTextureFromSurface(renderer, surface);
+  texture = SDL_CreateTextureFromSurface(internal->renderer, surface);
   SDL_FreeSurface(surface);
 
   SDL_Rect dst{ x, y, w, h };
-  SDL_RenderCopy(renderer, texture, NULL, &dst);
+  SDL_RenderCopy(internal->renderer, texture, NULL, &dst);
   SDL_DestroyTexture(texture);
 }

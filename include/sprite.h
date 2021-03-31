@@ -18,7 +18,7 @@ class Sprite {
     /// @param renderer The renderer to use for drawing.
     /// @param dst A destination rectangle for this sprite.
     /// @todo Consider need for supporting `SDL_Rect*` for fullscreen drawing.
-    void draw(SDL_Renderer*, Rect dst) const;
+    void draw(Graphics*, Rect dst) const;
 
     /// @brief Sets the Texture region for this sprite.
     /// @param region The region to set (must fit within the texture).

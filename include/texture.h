@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 
-struct SDL_Texture;
-struct SDL_Renderer;
+// forward declaration of Graphics
+class Graphics;
 
 struct Vec2 {
   int x;
@@ -17,12 +17,11 @@ struct Rect {
 class Texture {
   public:
     /// @brief Default constructor for a Texture.
-    /// @param texture Optional texture for initialization.
-    Texture(SDL_Texture* texture = nullptr);
+    Texture();
     /// @brief Create a Texture from filename using renderer.
     /// @param filename The filename of a desired image.
     /// @param renderer The renderer which will be used for this texture.
-    Texture(const std::string& filename, SDL_Renderer* renderer);
+    Texture(const std::string& filename, Graphics* renderer);
 
     virtual ~Texture();
 
@@ -44,13 +43,13 @@ class Texture {
     /// @returns the height of this Texture.
     int height() const;
 
-    /// @todo Consider removing this dangerous method.
-    /// @brief Gets the internal SDL_Texture (plz don't delete).
+    struct Internal;
+    /// @brief Gets the internal texture data.
     /// @returns the internal SDL_Texture.
-    SDL_Texture* get();
+    const Internal* get();
 
   private:
-    SDL_Texture* texture;
+    Internal* internal;
 
     /// There is no copy constructor for a Texture.
     Texture(const Texture&) = delete;

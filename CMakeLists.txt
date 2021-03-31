@@ -10,8 +10,6 @@ find_package(SDL2_ttf REQUIRED)
 
 add_library(gfx
   src/graphics.cpp
-  src/texture.cpp
-  src/sprite.cpp
 )
 target_include_directories(gfx PUBLIC include)
 target_include_directories(gfx PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})

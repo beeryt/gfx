@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-struct SDL_Window;
-
 /// A simple Color struct for 8-bit RGBA
 struct Color {
   uint8_t r; ///< Red color channel.
@@ -37,6 +35,7 @@ class Graphics {
     /// @param h The window height.
     /// @todo Figure out if the dimensions include the border.
     Graphics(const char* title = "", int w = 320, int h = 240);
+    ~Graphics();
 
     /// @brief A MotionCallback is called whenever cursor motion is detected.
     /// @param x The x-coordinate of the cursor position.
@@ -131,8 +130,8 @@ class Graphics {
     void drawText(const std::string& text, int x, int y, int w, int h);
 
   private:
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    struct Internal;
+    Internal* internal;
     std::vector<std::unique_ptr<Texture>> textures;
     MotionCallback motionCallback;
     TouchCallback touchCallback;
