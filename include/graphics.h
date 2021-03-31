@@ -2,6 +2,7 @@
 #include "window.h"
 #include "shader.h"
 #include "texture.h"
+#include "mesh.h"
 #include <functional>
 #include <vector>
 

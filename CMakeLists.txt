@@ -14,6 +14,7 @@ add_library(gfx
   src/graphics.cpp
   src/window.cpp
   src/shader.cpp
+  src/mesh.cpp
 )
 target_include_directories(gfx PUBLIC include)
 target_link_libraries(gfx PRIVATE glfw glad)
