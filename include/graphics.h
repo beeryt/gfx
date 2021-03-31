@@ -10,7 +10,9 @@ class Graphics {
   public:
     using ErrorCallbackFn = std::function<void(int, const char*)>;
     static void SetErrorCallback(ErrorCallbackFn);
-    static std::shared_ptr<Window> CreateWindow(const std::string& title, int width, int height);
+
+    template <class... Args>
+    static std::shared_ptr<Window> CreateWindow(Args...args) { return std::make_shared<Window>(args...); }
 
   private:
     Graphics();
@@ -20,5 +22,4 @@ class Graphics {
 
     ErrorCallbackFn error_callback;
     static void HandleError(int error_code, const char* description);
-    std::vector<std::shared_ptr<Window>> windows;
 };

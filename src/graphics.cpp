@@ -19,7 +19,6 @@ Graphics::Graphics() {
 }
 
 Graphics::~Graphics() {
-  windows.clear();
   spdlog::trace("{}", __PRETTY_FUNCTION__);
   glfwTerminate();
 }
@@ -31,12 +30,6 @@ Graphics& Graphics::Instance() {
 
 void Graphics::SetErrorCallback(ErrorCallbackFn cb) {
   Instance().error_callback = cb;
-}
-
-std::shared_ptr<Window> Graphics::CreateWindow(const std::string& title, int width, int height) {
-  auto window = std::make_shared<Window>( title, width, height );
-  Instance().windows.push_back(window);
-  return window;
 }
 
 void Graphics::HandleError(int error_code, const char* description) {
