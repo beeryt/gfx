@@ -20,7 +20,7 @@ Window::ErrorCallback Window::error_callback = [](const Window&, unsigned id, sp
 
 Window::Window(int width, int height, const std::string& title) : internal(std::make_unique<Internal>())
 {
-  spdlog::trace("{}", __FUNCSIG__);
+  spdlog::trace("{}", __FUNCTION__);
 
   // initialize graphics engine instance
   if (Graphics::instance.use_count() == 0) {
@@ -73,7 +73,7 @@ Window::Window(int width, int height, const std::string& title) : internal(std::
 Window::Window(Window&& move) noexcept : internal(std::move(move.internal)) {}
 
 Window::~Window() {
-  spdlog::trace("{}", __FUNCSIG__);
+  spdlog::trace("{}", __FUNCTION__);
   if(internal->window) {glfwDestroyWindow(internal->window); }
 }
 

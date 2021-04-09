@@ -25,7 +25,7 @@ std::string Graphics::GetClipboard()
 
 Graphics::Graphics()
 {
-  spdlog::trace("{}", __FUNCSIG__);
+  spdlog::trace("{}", __FUNCTION__);
   // initialize the framework
   if (!glfwInit()) { throw std::runtime_error("glfwInit() failed"); }
 
@@ -41,4 +41,4 @@ Graphics::Graphics()
   spdlog::info("Loaded GLFW {}.{}.{}", major, minor, revision);
 }
 
-Graphics::~Graphics() { spdlog::trace("{}", __FUNCSIG__); glfwTerminate(); }
+Graphics::~Graphics() { spdlog::trace("{}", __FUNCTION__); glfwTerminate(); }
