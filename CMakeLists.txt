@@ -13,7 +13,7 @@ add_library(gfx
   src/mesh.cpp
 )
 target_include_directories(gfx PUBLIC include)
-target_link_libraries(gfx PRIVATE glfw glad_gl_core_33)
+target_link_libraries(gfx PRIVATE glfw glm::glm spdlog::spdlog glad_gl_core_33)
 
 option(BUILD_DOC "Build documentation" OFF)
 find_package(Doxygen)

@@ -17,7 +17,7 @@ struct Mesh::Internal {
 Mesh::Mesh(const Mesh& o) : Mesh(o.internal->vertices, o.internal->indices, o.internal->textures) {}
 
 Mesh::Mesh(VertexList vertices, IndexList indices, TextureList textures) {
-  spdlog::info("{}", __PRETTY_FUNCTION__);
+  spdlog::info("{}", __FUNCTION__);
   internal = std::make_unique<Internal>();
   internal->vertices = vertices;
   internal->indices = indices;
@@ -26,11 +26,11 @@ Mesh::Mesh(VertexList vertices, IndexList indices, TextureList textures) {
 }
 
 Mesh::~Mesh() {
-  spdlog::info("{}", __PRETTY_FUNCTION__);
+  spdlog::info("{}", __FUNCTION__);
 }
 
 void Mesh::setupMesh() {
-  spdlog::info("{}", __PRETTY_FUNCTION__);
+  spdlog::info("{}", __FUNCTION__);
   glGenVertexArrays(1, &internal->VAO);
   glGenBuffers(1, &internal->VBO);
   glGenBuffers(1, &internal->EBO);

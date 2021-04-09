@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <functional>
 #include <glad/gl.h>
 #include <spdlog/spdlog.h>
@@ -25,8 +26,9 @@ void CheckCompileErrors(unsigned int id, bool compiler) {
   GetInteger(id, type, &success);
   if (!success) {
     GetInfoLog(id, sizeof(infoLog), NULL, infoLog);
-    fprintf(stderr, "ERROR:SHADER:%s: %s\n", name, infoLog);
-    exit(1);
+    char buf[256];
+    snprintf(buf, sizeof(buf), "ERROR:SHADER:%s: %s\n", name, infoLog);
+    throw std::runtime_error(buf);
   }
 }
 
@@ -59,7 +61,7 @@ unsigned int CompileShader(const char* path, GLenum type) {
 }
 
 Shader::Shader(const char* vPath, const char* fPath, const char* gPath) {
-  spdlog::trace("{}", __PRETTY_FUNCTION__);
+  spdlog::trace("{}", __FUNCTION__);
   auto vertex = CompileShader(vPath, GL_VERTEX_SHADER);
   auto fragment = CompileShader(fPath, GL_FRAGMENT_SHADER);
   auto geometry = CompileShader(gPath, GL_GEOMETRY_SHADER);
@@ -102,7 +104,7 @@ void Shader::Info() {
 }
 
 Shader::~Shader() {
-  spdlog::trace("{}", __PRETTY_FUNCTION__);
+  spdlog::trace("{}", __FUNCTION__);
   glDeleteProgram(ID);
 }
 
