@@ -1,27 +1,27 @@
 #pragma once
 #include "window.h"
-#include "shader.h"
-#include "texture.h"
-#include "mesh.h"
 #include <functional>
-#include <vector>
 
-class Graphics {
-  public:
-    using ErrorCallbackFn = std::function<void(int, const char*)>;
-    static void SetErrorCallback(ErrorCallbackFn);
+class Graphics
+{
+public:
+  template <typename...Args>
+  static Window CreateWindow(Args...args) { return Window{ args... }; }
 
-    template <class... Args>
-    static std::shared_ptr<Window> CreateWindow(Args...args) { return std::make_shared<Window>(args...); }
+  static void HandleEvents(double timeout = 0.0);
+  static void PostEmptyEvent();
 
-    static void Initialize() { Instance(); }
+  static std::string GetClipboard();
+  static void SetClipboard(const std::string& string);
 
-  private:
-    Graphics();
-    ~Graphics();
+  using ErrorCallbackFn = std::function<void(int, const char*)>;
+  static void SetErrorCallback(ErrorCallbackFn callback);
 
-    static Graphics& Instance();
-
-    ErrorCallbackFn error_callback;
-    static void HandleError(int error_code, const char* description);
+private:
+  Graphics();
+  ~Graphics();
+  friend class Window;
+  static std::weak_ptr<Graphics> instance;
+  static ErrorCallbackFn error_callback;
 };
+

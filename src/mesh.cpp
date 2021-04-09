@@ -49,5 +49,11 @@ void Mesh::Draw(Shader& shader) {
   shader.use();
   glBindVertexArray(internal->VAO);
 
-  glDrawElements(GL_TRIANGLES, internal->indices.size(), GL_UNSIGNED_INT, 0);
+  GLenum t = GL_TRIANGLES;
+  switch (type) {
+    case TRIANGLES: t = GL_TRIANGLES; break;
+    case TRIANGLE_STRIP: t = GL_TRIANGLE_STRIP; break;
+    case TRIANGLE_FAN: t = GL_TRIANGLE_FAN; break;
+  }
+  glDrawElements(t, internal->indices.size(), GL_UNSIGNED_INT, 0);
 }

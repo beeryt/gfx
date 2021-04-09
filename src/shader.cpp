@@ -46,7 +46,7 @@ unsigned int CompileShader(const char* path, GLenum type) {
     // convert stream into string
     string = stream.str();
   } catch (std::ifstream::failure& e) {
-    fprintf(stderr, "ERROR:SHADER:FILE: %s\n", e.what());
+    fprintf(stderr, "ERROR:SHADER:FILE: (%s) %s\n", path, e.what());
   }
 
   const char* code = string.c_str();
@@ -74,6 +74,31 @@ Shader::Shader(const char* vPath, const char* fPath, const char* gPath) {
   if (vPath) glDeleteShader(vertex);
   if (fPath) glDeleteShader(fragment);
   if (gPath) glDeleteShader(geometry);
+
+}
+
+void Shader::Info() {
+  GLint param;
+  glGetProgramiv(ID, GL_ATTACHED_SHADERS, &param);
+  spdlog::debug("GL_ATTACHED_SHADERS: {}", param);
+
+  auto shaders = new GLuint[param];
+  glGetAttachedShaders(ID, param, NULL, shaders);
+  for (int i = 0; i < param; ++i) {
+    GLint param2;
+    glGetShaderiv(shaders[i], GL_SHADER_TYPE, &param2);
+    spdlog::debug("  {}: {} ({})", i, shaders[i],
+        param2 == GL_VERTEX_SHADER ? "VERTEX" :
+        param2 == GL_FRAGMENT_SHADER ? "FRAGMENT" :
+        param2 == GL_GEOMETRY_SHADER ? "GEOMETRY" : "UNKNOWN");
+    if (param2 == GL_GEOMETRY_SHADER) {
+      glGetProgramiv(ID, GL_GEOMETRY_INPUT_TYPE, &param2);
+      spdlog::debug("GL_GEOMETRY_INPUT_TYPE: {}", param2);
+      glGetProgramiv(ID, GL_GEOMETRY_OUTPUT_TYPE, &param2);
+      spdlog::debug("GL_GEOMETRY_OUTPUT_TYPE: {}", param2);
+    }
+  }
+  delete shaders;
 }
 
 Shader::~Shader() {
@@ -83,6 +108,16 @@ Shader::~Shader() {
 
 void Shader::use() {
   glUseProgram(ID);
+}
+
+void Shader::setVec2(const char* name, const glm::vec2& value) {
+  auto loc = glGetUniformLocation(ID, name);
+  glUniform2fv(loc, 1, &value[0]);
+}
+
+void Shader::setVec3(const char* name, const glm::vec3& value) {
+  auto loc = glGetUniformLocation(ID, name);
+  glUniform3fv(loc, 1, &value[0]);
 }
 
 void Shader::setMat4(const char* name, const glm::mat4& value) {
