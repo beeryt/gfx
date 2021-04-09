@@ -4,11 +4,7 @@ project(GFX
   DESCRIPTION "A dumb-as-nails graphics framework build on SDL2")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-find_package(glfw3 3.3 REQUIRED)
-
-add_library(glad libs/glad/src/gl.c)
-target_include_directories(glad PUBLIC libs/glad/include)
-target_link_libraries(glad ${CMAKE_DL_LIBS})
+add_subdirectory(libs)
 
 add_library(gfx
   src/graphics.cpp
@@ -17,7 +13,7 @@ add_library(gfx
   src/mesh.cpp
 )
 target_include_directories(gfx PUBLIC include)
-target_link_libraries(gfx PRIVATE glfw glad)
+target_link_libraries(gfx PRIVATE glfw glad_gl_core_33)
 
 option(BUILD_DOC "Build documentation" OFF)
 find_package(Doxygen)
