@@ -55,8 +55,8 @@ Window::Window(int width, int height, const std::string& title) : internal(std::
       width, height,
       SDL_WINDOW_OPENGL);
   if (!internal->window) {
-    char buf[256];
-    snprintf(buf, sizeof(buf), "SDL_CreateWindow() failed: %s\n", SDL_GetError());
+    auto buf = fmt::format("SDL_CreateWindow() failed: {}", SDL_GetError());
+    spdlog::error(buf);
     throw std::runtime_error(buf);
   }
   SDL_SetWindowData(internal->window, "class", this);

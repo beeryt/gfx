@@ -8,6 +8,9 @@
 #include <stdexcept>
 
 std::weak_ptr<Graphics> Graphics::instance;
+#ifdef USE_SDL
+std::vector<std::weak_ptr<Window>> Graphics::windows;
+#endif
 
 Graphics::ErrorCallbackFn Graphics::error_callback = [](int error, const char* description) noexcept { fprintf(stderr, "ERROR (%04x): %s\n", error, description); };
 
@@ -19,6 +22,14 @@ void Graphics::HandleEvents(double timeout) {
     if (!SDL_WaitEventTimeout(NULL, timeout * 1000)) return;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_QUIT) {
+        // dispatch to all windows
+        for (auto& window : windows) {
+          if (auto w = window.lock()) {
+            w->ShouldClose(true);
+          }
+        }
+      }
       if (e.type == SDL_WINDOWEVENT) {
         // dispatch to window
         SDL_Window *window = SDL_GetWindowFromID(e.window.windowID);
@@ -36,7 +47,11 @@ void Graphics::HandleEvents(double timeout) {
 
 void Graphics::SetClipboard(const std::string& string)
 {
-#ifndef USE_SDL
+#ifdef USE_SDL
+  if (0 != SDL_SetClipboardText(string.c_str())) {
+    spdlog::error("SDL_SetClipboardText() failed: {}", SDL_GetError());
+  }
+#else
   if (instance.lock()) glfwSetClipboardString(nullptr, string.c_str());
 #endif
 }
@@ -44,7 +59,11 @@ void Graphics::SetClipboard(const std::string& string)
 std::string Graphics::GetClipboard()
 {
 #ifdef USE_SDL
-  return "";
+  auto str = SDL_GetClipboardText();
+  std::string out;
+  if (!str) { spdlog::error("SDL_GetClipboardText() failed: {}", SDL_GetError()); }
+  else { out = str; SDL_free(str); }
+  return out;
 #else
   if (instance.lock()) return glfwGetClipboardString(nullptr); else return "";
 #endif

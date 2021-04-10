@@ -20,7 +20,7 @@ set(GFX_LIBS
 )
 
 add_library(gfx-sdl ${GFX_SOURCES})
-target_compile_definitions(gfx-sdl PRIVATE USE_SDL)
+target_compile_definitions(gfx-sdl PUBLIC USE_SDL)
 target_include_directories(gfx-sdl PUBLIC include)
 target_link_libraries(gfx-sdl PRIVATE SDL2 ${GFX_LIBS})
 
