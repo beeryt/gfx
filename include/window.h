@@ -11,6 +11,8 @@ public:
   Window(Window&&) noexcept;
   virtual ~Window();
 
+  void SetViewport(int x, int y, int width, int height);
+
   bool ShouldClose() const;
   void ShouldClose(bool);
   void Clear();
@@ -94,4 +96,6 @@ private:
   struct Internal;
   std::unique_ptr<Internal> internal;
   static ErrorCallback error_callback;
+
+  SizeCallback size_callback = [](Window&,int,int){};
 };

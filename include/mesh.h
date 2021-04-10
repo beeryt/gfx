@@ -32,6 +32,7 @@ class Mesh {
     Mesh& operator=(const Mesh&);
 
     virtual void Draw(Shader& shader);
+    virtual void DrawInstanced(Shader& shader, unsigned count);
 
   protected:
     void setupMesh();

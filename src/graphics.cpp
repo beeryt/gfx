@@ -34,8 +34,9 @@ void Graphics::HandleEvents(double timeout) {
         // dispatch to window
         SDL_Window *window = SDL_GetWindowFromID(e.window.windowID);
         Window& w = *static_cast<Window*>(SDL_GetWindowData(window, "class"));
-        if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
-          w.ShouldClose(true);
+        switch (e.window.event)
+        {
+          case SDL_WINDOWEVENT_CLOSE: w.ShouldClose(true); break;
         }
       }
     }

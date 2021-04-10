@@ -57,3 +57,16 @@ void Mesh::Draw(Shader& shader) {
   }
   glDrawElements(t, internal->indices.size(), GL_UNSIGNED_INT, 0);
 }
+
+void Mesh::DrawInstanced(Shader& shader, unsigned count)
+{
+  shader.use();
+  glBindVertexArray(internal->VAO);
+  GLenum t = GL_TRIANGLES;
+  switch (type) {
+    case TRIANGLES: t = GL_TRIANGLES; break;
+    case TRIANGLE_STRIP: t = GL_TRIANGLE_STRIP; break;
+    case TRIANGLE_FAN: t = GL_TRIANGLE_FAN; break;
+  }
+  glDrawElementsInstanced(t, internal->indices.size(), GL_UNSIGNED_INT, 0, count);
+}

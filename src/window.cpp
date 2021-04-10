@@ -50,10 +50,10 @@ Window::Window(int width, int height, const std::string& title) : internal(std::
 
   // create window
 #ifdef USE_SDL
+  unsigned flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
   internal->window = SDL_CreateWindow(title.c_str(),
       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      width, height,
-      SDL_WINDOW_OPENGL);
+      width, height, flags);
   if (!internal->window) {
     auto buf = fmt::format("SDL_CreateWindow() failed: {}", SDL_GetError());
     spdlog::error(buf);
@@ -98,6 +98,14 @@ Window::Window(int width, int height, const std::string& title) : internal(std::
     if (error_callback) error_callback(ref, id, level, message);
   };
   glDebugMessageCallback(handler, this);
+
+#ifndef USE_SDL
+  auto size_callback_handler = [](GLFWwindow* win, int xpos, int ypos) {
+    auto w = static_cast<Window*>(glfwGetWindowUserPointer(win));
+    if (w && w->size_callback) w->size_callback(*w, xpos, ypos);
+  };
+  glfwSetWindowSizeCallback(internal->window, size_callback_handler);
+#endif
 }
 
 Window::Window(Window&& move) noexcept : internal(std::move(move.internal)) {}
@@ -139,4 +147,16 @@ void Window::SwapBuffers()
 #else
   glfwSwapBuffers(internal->window);
 #endif
+}
+
+Window::SizeCallback Window::SetSizeCallback(SizeCallback cb)
+{
+  auto out = size_callback;
+  size_callback = cb;
+  return out;
+}
+
+void Window::SetViewport(int x, int y, int width, int height)
+{
+  glViewport(x, y, width, height);
 }
