@@ -12,6 +12,7 @@ public:
   virtual ~Window();
 
   bool ShouldClose() const;
+  void ShouldClose(bool);
   void Clear();
   void SwapBuffers();
 

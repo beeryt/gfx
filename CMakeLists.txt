@@ -6,14 +6,27 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 add_subdirectory(libs)
 
-add_library(gfx
+set(GFX_SOURCES
   src/graphics.cpp
   src/window.cpp
   src/shader.cpp
   src/mesh.cpp
 )
-target_include_directories(gfx PUBLIC include)
-target_link_libraries(gfx PRIVATE glfw glm::glm spdlog::spdlog glad_gl_core_33)
+
+set(GFX_LIBS
+  glm::glm
+  glad_gl_core_33
+  spdlog::spdlog
+)
+
+add_library(gfx-sdl ${GFX_SOURCES})
+target_compile_definitions(gfx-sdl PRIVATE USE_SDL)
+target_include_directories(gfx-sdl PUBLIC include)
+target_link_libraries(gfx-sdl PRIVATE SDL2 ${GFX_LIBS})
+
+add_library(gfx-glfw ${GFX_SOURCES})
+target_include_directories(gfx-glfw PUBLIC include)
+target_link_libraries(gfx-glfw PRIVATE glfw ${GFX_LIBS})
 
 option(BUILD_DOC "Build documentation" OFF)
 find_package(Doxygen)
